@@ -27,7 +27,7 @@ def test_get_unknown_raises() -> None:
     registry = HarvesterRegistry()
     try:
         registry.get("nonexistent")
-        assert False, "Should have raised"
+        raise AssertionError("Should have raised KeyError")
     except KeyError:
         pass
 

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -39,7 +39,7 @@ class EnvelopeBuilder:
             "version": "1.0",
             "source": self._source,
             "snapshot_type": snapshot_type,
-            "timestamp": timestamp or datetime.now(timezone.utc).isoformat(),
+            "timestamp": timestamp or datetime.now(UTC).isoformat(),
             "entity_type": self._entity_type,
             "source_url": source_url,
             "data": data,

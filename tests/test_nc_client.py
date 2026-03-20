@@ -1,8 +1,8 @@
 """Test North Cloud API client."""
 import httpx
 import respx
-from harvest.core.nc_client import NCClient
 
+from harvest.core.nc_client import NCClient
 
 NC_BASE = "http://localhost:8050"
 

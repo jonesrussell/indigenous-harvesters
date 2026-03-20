@@ -1,5 +1,6 @@
 """Test CLI commands."""
 from click.testing import CliRunner
+
 from harvest.cli import main
 
 

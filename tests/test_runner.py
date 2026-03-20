@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from harvest.core.runner import Runner, RunResult
 from conftest import StubHarvester
+
+from harvest.core.runner import Runner, RunResult
 
 
 def test_dry_run_does_not_deliver() -> None:

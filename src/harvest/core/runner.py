@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from harvest.core.envelope import EnvelopeBuilder
-from harvest.core.harvester import Harvester
 from harvest.core.license_tracker import LicenseTracker
-from harvest.core.nc_client import NCClient
-from harvest.core.nc_publisher import NCPublisher
+
+if TYPE_CHECKING:
+    from harvest.core.harvester import Harvester
+    from harvest.core.nc_client import NCClient
+    from harvest.core.nc_publisher import NCPublisher
 
 logger = logging.getLogger(__name__)
 

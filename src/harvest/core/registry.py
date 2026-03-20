@@ -1,7 +1,10 @@
 """Harvester plugin registry."""
 from __future__ import annotations
 
-from harvest.core.harvester import Harvester
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from harvest.core.harvester import Harvester
 
 
 class HarvesterRegistry:
