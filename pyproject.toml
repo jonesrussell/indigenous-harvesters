@@ -17,7 +17,7 @@ harvest = "harvest.cli:main"
 dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",
-    "responses>=0.25",
+    "respx>=0.22",
     "mypy>=1.10",
     "ruff>=0.4",
 ]

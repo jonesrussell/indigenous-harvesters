@@ -1,0 +1,7 @@
+{
+    "accepted": 1,
+    "rejected": 0,
+    "results": [
+        {"payload_id": "opd-makwa-20260320", "status": "accepted", "trace_id": "test-uuid"}
+    ]
+}
