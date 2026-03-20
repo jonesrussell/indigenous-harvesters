@@ -37,19 +37,24 @@ class NCClient:
         if resp.status_code == 409:
             # Already exists — look up by identity_key
             identity_key = source_data.get("identity_key", "")
-            if identity_key:
-                lookup = self._client.get(
-                    "/api/v1/sources/by-identity",
-                    params={"identity_key": identity_key},
-                )
-                if lookup.status_code == 200:
-                    return cast("dict[str, Any]", lookup.json())
-
-            logger.warning("Source conflict but no identity_key for lookup: %s", source_data.get("name"))
-            return cast("dict[str, Any]", resp.json())
+            if not identity_key:
+                raise NCClientError(f"Source conflict with no identity_key for: {source_data.get('name')}")
+            lookup = self._client.get(
+                "/api/v1/sources/by-identity",
+                params={"identity_key": identity_key},
+            )
+            if lookup.status_code != 200:
+                raise NCClientError(f"Source lookup failed ({lookup.status_code}) for identity_key: {identity_key}")
+            return cast("dict[str, Any]", lookup.json())
 
         resp.raise_for_status()
         return cast("dict[str, Any]", resp.json())  # unreachable but satisfies type checker
+
+    def __enter__(self) -> NCClient:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
 
     def close(self) -> None:
         self._client.close()

@@ -70,8 +70,14 @@ class Runner:
         envelopes: list[dict[str, Any]] = []
         for raw in harvester.fetch():
             result.fetched += 1
-            payloads = harvester.transform(raw)
+            try:
+                payloads = harvester.transform(raw)
+            except Exception as exc:
+                result.errors.append(f"transform error on record {result.fetched}: {exc}")
+                logger.warning("Transform failed for record %d: %s", result.fetched, exc)
+                continue
             for payload in payloads:
+                payload = dict(payload)  # shallow copy — don't mutate harvester data
                 entity_type = payload.pop("_entity_type", "unknown")
                 source_url = payload.pop("_source_url", reg.get("url", ""))
                 builder = EnvelopeBuilder(

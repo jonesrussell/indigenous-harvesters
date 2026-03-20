@@ -1,4 +1,6 @@
 """Test harvester plugin registry."""
+import pytest
+
 from harvest.core.registry import HarvesterRegistry
 
 
@@ -25,11 +27,8 @@ def test_register_and_get() -> None:
 
 def test_get_unknown_raises() -> None:
     registry = HarvesterRegistry()
-    try:
+    with pytest.raises(KeyError, match="nonexistent"):
         registry.get("nonexistent")
-        raise AssertionError("Should have raised KeyError")
-    except KeyError:
-        pass
 
 
 def test_list_registered() -> None:

@@ -15,4 +15,4 @@ def test_run_unknown_harvester() -> None:
     runner = CliRunner()
     result = runner.invoke(main, ["run", "nonexistent"])
     assert result.exit_code != 0
-    assert "not found" in result.output.lower() or "no harvester" in result.output.lower()
+    assert "no harvester found with name 'nonexistent'" in result.output.lower()

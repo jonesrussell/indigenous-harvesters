@@ -59,17 +59,12 @@ def run(name: str, dry_run: bool, nc_url: str, nc_token: str) -> None:
         click.echo(f"Error: No harvester found with name '{name}'", err=True)
         sys.exit(1)
 
-    nc_client = NCClient(base_url=nc_url, jwt_token=nc_token)
-    nc_publisher = NCPublisher(base_url=nc_url, jwt_token=nc_token)
-    runner = Runner(nc_client=nc_client, nc_publisher=nc_publisher, dry_run=dry_run)
-
-    try:
+    with NCClient(base_url=nc_url, jwt_token=nc_token) as nc_client, \
+         NCPublisher(base_url=nc_url, jwt_token=nc_token) as nc_publisher:
+        runner = Runner(nc_client=nc_client, nc_publisher=nc_publisher, dry_run=dry_run)
         result = runner.run(harvester)
         click.echo(result.summary())
         if result.errors:
             for error in result.errors:
                 click.echo(f"  ERROR: {error}", err=True)
             sys.exit(1)
-    finally:
-        nc_client.close()
-        nc_publisher.close()

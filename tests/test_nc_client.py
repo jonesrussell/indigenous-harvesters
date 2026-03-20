@@ -1,8 +1,9 @@
 """Test North Cloud API client."""
 import httpx
+import pytest
 import respx
 
-from harvest.core.nc_client import NCClient
+from harvest.core.nc_client import NCClient, NCClientError
 
 NC_BASE = "http://localhost:8050"
 
@@ -37,3 +38,17 @@ def test_register_source_conflict_returns_existing() -> None:
         "identity_key": "opd",
     })
     assert result["id"] == "existing-uuid"
+
+
+@respx.mock
+def test_register_source_conflict_no_identity_key_raises() -> None:
+    respx.post(f"{NC_BASE}/api/v1/sources").mock(
+        return_value=httpx.Response(409, json={"error": "Source name 'OPD' already exists"})
+    )
+    client = NCClient(base_url=NC_BASE, jwt_token="test-token")
+    with pytest.raises(NCClientError, match="no identity_key"):
+        client.register_source({
+            "name": "OPD",
+            "url": "https://ojibwe.lib.umn.edu",
+            "type": "structured",
+        })

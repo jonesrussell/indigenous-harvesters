@@ -54,6 +54,57 @@ def test_run_with_multiple_records() -> None:
     assert result.envelopes_built == 3
 
 
+def test_license_validation_failure_blocks_run() -> None:
+    nc_client = MagicMock()
+    nc_publisher = MagicMock()
+    harvester = StubHarvester()
+    # Override source_registration to return unknown license
+    harvester.source_registration = lambda: {  # type: ignore[assignment]
+        "name": "Bad Source",
+        "url": "https://example.com",
+        "type": "structured",
+        "license_type": "unknown",
+        "attribution_text": "Test",
+    }
+    runner = Runner(nc_client=nc_client, nc_publisher=nc_publisher, dry_run=False)
+    result = runner.run(harvester)
+
+    nc_client.register_source.assert_not_called()
+    nc_publisher.deliver.assert_not_called()
+    assert result.fetched == 0
+    assert len(result.errors) == 1
+    assert "manual review" in result.errors[0]
+
+
+def test_transform_error_continues_processing() -> None:
+    nc_client = MagicMock()
+    nc_client.register_source.return_value = {"id": "uuid-123"}
+    nc_publisher = MagicMock()
+    nc_publisher.deliver.return_value = {"accepted": 1, "rejected": 0, "results": []}
+
+    harvester = StubHarvester(records=[
+        {"word": "makwa"},
+        {"bad_key": "will_fail"},
+        {"word": "jiimaan"},
+    ])
+    # Make transform raise on records without "word" key
+    original_transform = harvester.transform
+
+    def flaky_transform(raw: dict) -> list[dict]:
+        if "word" not in raw:
+            raise ValueError("Missing 'word' key")
+        return original_transform(raw)
+
+    harvester.transform = flaky_transform  # type: ignore[assignment]
+    runner = Runner(nc_client=nc_client, nc_publisher=nc_publisher, dry_run=False)
+    result = runner.run(harvester)
+
+    assert result.fetched == 3
+    assert result.envelopes_built == 2  # 1 failed, 2 succeeded
+    assert len(result.errors) == 1
+    assert "transform error" in result.errors[0]
+
+
 def test_run_result_summary() -> None:
     result = RunResult(fetched=10, envelopes_built=10, delivered=10, accepted=8, rejected=2, errors=[])
     summary = result.summary()

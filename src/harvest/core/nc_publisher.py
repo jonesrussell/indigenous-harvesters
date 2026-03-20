@@ -28,5 +28,11 @@ class NCPublisher:
         resp.raise_for_status()
         return cast("dict[str, Any]", resp.json())
 
+    def __enter__(self) -> NCPublisher:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
+
     def close(self) -> None:
         self._client.close()
