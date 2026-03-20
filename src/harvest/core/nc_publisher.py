@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
@@ -26,7 +26,7 @@ class NCPublisher:
 
         resp = self._client.post("/api/v1/ingest", json={"envelopes": envelopes})
         resp.raise_for_status()
-        return resp.json()
+        return cast("dict[str, Any]", resp.json())
 
     def close(self) -> None:
         self._client.close()

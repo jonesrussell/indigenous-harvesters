@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
@@ -32,7 +32,7 @@ class NCClient:
         resp = self._client.post("/api/v1/sources", json=source_data)
 
         if resp.status_code == 201:
-            return resp.json()
+            return cast("dict[str, Any]", resp.json())
 
         if resp.status_code == 409:
             # Already exists — look up by identity_key
@@ -43,13 +43,13 @@ class NCClient:
                     params={"identity_key": identity_key},
                 )
                 if lookup.status_code == 200:
-                    return lookup.json()
+                    return cast("dict[str, Any]", lookup.json())
 
             logger.warning("Source conflict but no identity_key for lookup: %s", source_data.get("name"))
-            return resp.json()
+            return cast("dict[str, Any]", resp.json())
 
         resp.raise_for_status()
-        return resp.json()  # unreachable but satisfies type checker
+        return cast("dict[str, Any]", resp.json())  # unreachable but satisfies type checker
 
     def close(self) -> None:
         self._client.close()
