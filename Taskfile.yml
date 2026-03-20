@@ -1,0 +1,28 @@
+version: '3'
+
+tasks:
+  install:
+    desc: Install package with dev dependencies
+    cmds:
+      - pip install -e ".[dev]"
+
+  test:
+    desc: Run all tests
+    cmds:
+      - pytest tests/ -v --tb=short
+
+  test:cov:
+    desc: Run tests with coverage
+    cmds:
+      - pytest tests/ -v --cov=harvest --cov-report=term-missing
+
+  lint:
+    desc: Run ruff + mypy
+    cmds:
+      - ruff check src/ tests/
+      - mypy src/
+
+  format:
+    desc: Format code with ruff
+    cmds:
+      - ruff format src/ tests/
