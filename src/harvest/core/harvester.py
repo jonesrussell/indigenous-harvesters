@@ -1,0 +1,34 @@
+"""Harvester protocol — the contract every harvester implements."""
+from __future__ import annotations
+
+from typing import Iterator, Protocol, runtime_checkable
+
+
+@runtime_checkable
+class Harvester(Protocol):
+    """Protocol for content harvesters.
+
+    Each harvester knows how to:
+    - Register itself as a source in NC
+    - Fetch raw records from its data source
+    - Transform raw records into Minoo envelope payloads
+    """
+
+    name: str
+    source_type: str  # "structured" or "api"
+
+    def source_registration(self) -> dict:
+        """Return fields for NC source-manager registration."""
+        ...
+
+    def fetch(self) -> Iterator[dict]:
+        """Yield raw records from the data source."""
+        ...
+
+    def transform(self, raw: dict) -> list[dict]:
+        """Transform a raw record into envelope payload dicts.
+
+        Returns a list because one raw record may produce multiple
+        entities (e.g., a dictionary entry + example sentences).
+        """
+        ...
