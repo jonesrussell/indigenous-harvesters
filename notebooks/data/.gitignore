@@ -1,0 +1,5 @@
+# Scraped data files — large and regenerable
+*.csv
+*.json
+*.parquet
+!.gitignore

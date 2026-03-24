@@ -21,6 +21,13 @@ dev = [
     "mypy>=1.10",
     "ruff>=0.4",
 ]
+notebooks = [
+    "jupyter>=1.0",
+    "pandas>=2.2",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "tqdm>=4.66",
+]
 
 [build-system]
 requires = ["setuptools>=75.0"]
