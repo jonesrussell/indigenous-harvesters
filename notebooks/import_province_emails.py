@@ -34,6 +34,15 @@ SHARED_EMAILS = {
     "/tel:",                          # bad parse
     "ryan@archerdesigns.ca",          # web designer, not community
     "dylanloblaw@gmail.com",          # personal gmail, not community
+    "mgi@gov.mb.ca",                  # Manitoba government, not community
+    "firstname.lastname@muskodayfn.ca",  # template, not real email
+    "ehattesaht.office@ehatis.ca",    # wrong community (Ehattesaht, not Dzawada'enuxw)
+    "andrea.ritchie@gov.mb.ca",       # Manitoba government, not community
+    "jenna@mikwanfinancial.com",      # financial company, not community
+    "info@oib.ca.read",               # bad parse (.read suffix)
+    "reception@chawathil.org",        # wrong community (Chawathil, not Union Bar)
+    "reception@titqet.org",           # wrong community (T'it'q'et, not Tsal'alh)
+    "info@stolonation.bc.ca",         # Stó:lō Nation, not Yakweakwioose specifically
 }
 
 
