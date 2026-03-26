@@ -24,13 +24,16 @@ DRY_RUN = "--dry-run" in sys.argv
 NC_WRITE = "http://localhost:18050"
 JWT_SECRET = "CpgfEP9nKSzLJTzfSJKW8ynwsOXrlQJ1h8ZQRbYSBJ4="
 
-# Shared/tribal council emails to skip
+# Shared/tribal council emails and bad scrapes to skip
 SHARED_EMAILS = {
     "reception@ifna.ca",
     "info@fourarrowsrha.org",
     "helpdesk@pagc.net",
     "cfs.reception@mltc.net",
     "contact@stoney-nation.com",
+    "/tel:",                          # bad parse
+    "ryan@archerdesigns.ca",          # web designer, not community
+    "dylanloblaw@gmail.com",          # personal gmail, not community
 }
 
 
